@@ -1,0 +1,21 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid()) // ID unico e gerado.
+  username   String   @unique // Com unique não permite que tenham nomes cadastrados no banco de dados iguais
+  name       String
+  created_at DateTime @default(now()) // Now é um função do proprio prisma, ele vai preencher o valor atual do registro 
+
+  // O prisma irá criar a nome da tabela como User, como caixa alta e no plural
+  @@map("users") // Se quero alterar isso faço @@map() passando o nome que quero que tenha na tabela, neste caso "users" no publural e em caixa baixa
+}
