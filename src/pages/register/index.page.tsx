@@ -49,6 +49,7 @@ export default function Register() {
         name: data.name,
         username: data.username,
       })
+      await router.push('/register/connect-calendar')
     } catch (err) {
       // Se o Erro é uma instancia do AxiosError && tenho
       // Projeto: 6 Seção: Cadastro de Usuário Aula: Manipulando cookies no Next

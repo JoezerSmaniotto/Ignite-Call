@@ -13,7 +13,7 @@ export default async function handler(
 
   const { name, username } = req.body
 
-  // Verifica se já existe usuário com aquele nome
+  // Verifica se já existe usuário com aquele username
   // Projeto: 6 Seção: Cadastro de Usuário Aula: Manipulando cookies no Next
   const userExists = await prisma.user.findUnique({
     where: {
