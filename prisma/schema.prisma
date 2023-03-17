@@ -18,8 +18,9 @@ model User {
   avatar_url String?
   created_at DateTime @default(now()) // Now é um função do proprio prisma, ele vai preencher o valor atual do registro 
 
-  accounts Account[]
-  sessions Session[]
+  accounts      Account[] // Isso aqui os Array não so internos do Prisma, eles não irão criar colunas
+  sessions      Session[] //Servem para poder fazer user.timeIntervals, se não teria q colcoar "-" user.time_intervals,
+  timeIntervals UserTimeInterval[]
 
   // O prisma irá criar a nome da tabela como User, como caixa alta e no plural
   @@map("users") // Se quero alterar isso faço @@map() passando o nome que quero que tenha na tabela, neste caso "users" no publural e em caixa baixa
@@ -55,4 +56,15 @@ model Session {
   user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model UserTimeInterval {
+  id                    String @id @default(uuid())
+  week_day              Int
+  time_start_in_minutes Int
+  time_end_in_minutes   Int
+  user                  User   @relation(fields: [user_id], references: [id])
+  user_id               String
+
+  @@map("user_time_intervals")
 }
