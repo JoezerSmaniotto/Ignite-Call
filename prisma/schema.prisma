@@ -14,6 +14,7 @@ model User {
   id         String   @id @default(uuid()) // ID unico e gerado.
   username   String   @unique // Com unique não permite que tenham nomes cadastrados no banco de dados iguais
   name       String
+  bio        String?
   email      String?  @unique
   avatar_url String?
   created_at DateTime @default(now()) // Now é um função do proprio prisma, ele vai preencher o valor atual do registro 
