@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../../lib/prisma'
-import Schedule from '../../../schedule/[username]/index.page'
+// import Schedule from '../../../schedule/[username]/index.page'
 // Projeto: 6 Seção: Configuração de disponibilidade Aula: Rota de horários disponíveis
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handler(
   }
 
   const username = String(req.query.username)
-  // http://localhost:3000/api/users/joezer/availability?data=2023-03-21
+  // http://localhost:3000/api/users/joezer/availability?date=2023-03-23
   const { date } = req.query
 
   if (!date) {
@@ -36,7 +36,7 @@ export default async function handler(
 
   if (isPastDate) {
     // Se a data já sou, caso tentem alterar os dados no url para tentar zuar os dados já retorno erro
-    return res.json({ availability: [] })
+    return res.json({ possibleTimes: [], availableTimes: [] })
   }
 
   const userAvailability = await prisma.userTimeInterval.findFirst({
@@ -48,7 +48,7 @@ export default async function handler(
 
   if (!userAvailability) {
     // Se ele não selecionou aquele dia como disponivel já retorna como indisponivel para agendamento
-    return res.json({ availability: [] })
+    return res.json({ possibleTimes: [], availableTimes: [] })
   }
 
   const { time_start_in_minutes, time_end_in_minutes } = userAvailability
@@ -70,16 +70,21 @@ export default async function handler(
     where: {
       user_id: user.id,
       date: {
-        gte: referenceDate.set('hour', startHour).toDate(),
-        lte: referenceDate.set('hour', endHour).toDate(),
+        gte: referenceDate.set('hour', startHour).toDate(), // gte maior ou igual
+        lte: referenceDate.set('hour', endHour).toDate(), // lte menor ou igual
       },
     },
   })
 
   const availableTimes = possibleTimes.filter((time) => {
-    return !blockedTimes.some(
+    const isTimeBlocked = blockedTimes.some(
       (blockedTime) => blockedTime.date.getHours() === time,
     )
+
+    const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+
+    // A hora só vai estar disponiveçl caso não esteja bloqueada e no passado
+    return !isTimeBlocked && !isTimeInPast
   })
 
   return res.json({ possibleTimes, availableTimes })
