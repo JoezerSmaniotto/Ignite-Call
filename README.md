@@ -1,6 +1,6 @@
 # Ignite Call
 
-Neste projeto foi desenvolvido plataforma de agendamento de horários, salvando os agendamentos no google Calendary.
+Neste projeto foi desenvolvido a plataforma de agendamento de videoChamadas Ignite Call, salvando os agendamentos no google Calendary.
 Criando eventos, desta forma criando agendamentos de videochamadas, usando a plataforma google Meet para esse agendamento.
 
 ## Instalação
